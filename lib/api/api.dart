@@ -14,45 +14,48 @@ class Api {
       if (response.statusCode == 200) {
         final responseJson = json.decode(response.body);
         // log(responseJson.toString());
-        List<PostModel> model = (json.decode(response.body) as List)
-            .map((i) => PostModel.fromJson(i))
-            .toList();
+        List<PostModel> model = (responseJson as List).map((i) => PostModel.fromJson(i)).toList();
         return model;
       }
     } catch (e) {
       log(e.toString());
+      return Future.error(e.toString());
     }
     return null;
   }
 
-   static Future<PostModel?> getOnePost(final int id) async {
+  static Future<PostModel?> getOnePost(final int id) async {
     try {
       var url = Uri.parse('$baseUrl/posts/$id');
       var response = await http.get(url);
       if (response.statusCode == 200) {
         final responseJson = json.decode(response.body);
         // log(responseJson.toString());
-        PostModel model =PostModel.fromJson(responseJson);
+        PostModel model = PostModel.fromJson(responseJson);
         return model;
       }
     } catch (e) {
       log(e.toString());
+      return Future.error(e.toString());
     }
+    return null;
   }
 
-     static Future<List<CommentModel>?> getComments(final int id) async {
+  static Future<List<CommentModel>?> getComments(final int id) async {
     try {
       var url = Uri.parse('$baseUrl/comments?postId=$id');
       var response = await http.get(url);
       if (response.statusCode == 200) {
         final responseJson = json.decode(response.body);
-        List<CommentModel> model = (responseJson as List)
-            .map((i) => CommentModel.fromJson(i))
-            .toList();
+        // log(responseJson.toString());
+        List<CommentModel> model =
+            (responseJson as List).map((i) => CommentModel.fromJson(i)).toList();
         return model;
       }
     } catch (e) {
       log(e.toString());
+      return Future.error(e.toString());
     }
+    return null;
   }
 }

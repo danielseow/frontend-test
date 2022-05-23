@@ -9,66 +9,64 @@ class PostPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.grey[200],
-        appBar: AppBar(
-          title: const Text('POST'),
-        ),
-        body: FutureBuilder(
-          future: Future.wait([Api.getOnePost(id), Api.getComments(id)]),
-          builder: (context, AsyncSnapshot snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              if (snapshot.hasData) {
-                PostModel? postModel = snapshot.data[0];
-                if (postModel == null) {
-                  return const Text('Error');
-                }
-                List<CommentModel> commentModel = snapshot.data[1] ?? [];
-                return SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Card(
-                          margin: const EdgeInsets.symmetric(vertical: 8),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Text(
-                                  postModel.title!,
-                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Text(postModel.body!),
-                              ],
-                            ),
+    return Scaffold(
+      backgroundColor: Colors.grey[200],
+      appBar: AppBar(
+        title: const Text('POST'),
+      ),
+      body: FutureBuilder(
+        future: Future.wait([Api.getOnePost(id), Api.getComments(id)]),
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasData) {
+              PostModel? postModel = snapshot.data[0];
+              if (postModel == null) {
+                return const Text('Error');
+              }
+              List<CommentModel> commentModel = snapshot.data[1] ?? [];
+              return SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Card(
+                        margin: const EdgeInsets.symmetric(vertical: 8),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Text(
+                                postModel.title!,
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(postModel.body!),
+                            ],
                           ),
                         ),
-                        const SizedBox(height: 10),
-                        const Divider(thickness: 2),
-                        CommentsListView(
-                          commentModel: commentModel,
-                        )
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 10),
+                      const Divider(thickness: 2),
+                      CommentsListView(
+                        commentModel: commentModel,
+                      )
+                    ],
                   ),
-                );
-              } else if (snapshot.hasError) {
-                return const Text('Error Occurs');
-              } else {
-                return const SizedBox.shrink();
-              }
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return const Text('Error Occurs');
+            } else {
+              return const SizedBox.shrink();
             }
-            return const CircularProgressIndicator();
-          },
-        ),
+          }
+          return const CircularProgressIndicator();
+        },
       ),
     );
   }
